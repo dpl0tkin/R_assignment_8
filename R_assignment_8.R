@@ -1,6 +1,5 @@
 #Problem 1
 library(dplyr)
-library(tidyr)
 
 mammal_sizes <- read.csv("data/MOMv3.3.txt", head = FALSE, sep = "\t", stringsAsFactors = FALSE, na.strings = "-999")
 
@@ -34,6 +33,12 @@ print(avg_extinct_mass)
 #Calculate mean weight per continent for extant & extinct mammals
 extant_mamm_cont <- group_by(extant_mamm, continent)
 avg_extant_mass_cont <- summarize(extant_mamm_cont, avg_extant_mass_cont = mean(combined_mass))
+colnames(avg_extant_mass_cont) <- c("continent","extant")
 
 extinct_mamm_cont <- group_by(extinct_mamm, continent)
 avg_extinct_mass_cont <- summarize(extinct_mamm_cont, avg_extinct_mass_cont = mean(combined_mass))
+colnames(avg_extinct_mass_cont) <- c("continent","extinct")
+
+#Join extant and extinct tables, and export
+avg_all_mass_cont <- full_join(avg_extant_mass_cont, avg_extinct_mass_cont)
+write.csv(avg_all_mass_cont, file = "continent_mass_differences.csv")
