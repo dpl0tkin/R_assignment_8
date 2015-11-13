@@ -9,9 +9,11 @@ colnames(mammal_sizes) <- c("continent", "status", "order",
 
 #Problem 2
 
+#Make new table with just columns of interest
+mammal_mass_data <- select(mammal_sizes, continent, status, combined_mass)
 #Create separate tables for extant and extinct taxa
-extant_mamm <- filter(mammal_sizes, status == "extant")
-extinct_mamm <- filter(mammal_sizes, status == "extinct")
+extant_mamm <- filter(mammal_mass_data, status == "extant")
+extinct_mamm <- filter(mammal_mass_data, status == "extinct")
 #Remove null combined_mass values
 extant_mamm <- na.omit(extant_mamm)
 extinct_mamm <-na.omit(extinct_mamm)
@@ -25,3 +27,10 @@ avg_extinct_mass <- mean(extinct_mass)
 
 print(avg_extant_mass)
 print(avg_extinct_mass)
+
+#Problem 3
+
+extant_mamm_cont <- group_by(extant_mamm, continent)
+avg_extant_mass_cont <- summarize(extant_mamm_cont, avg_extant_mass_cont = mean(combined_mass))
+
+extinct_mamm_location <- group_by(extinct_mamm, continent)
